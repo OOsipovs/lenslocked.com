@@ -1,58 +1,23 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"./controllers"
-	"./views"
 	"github.com/gorilla/mux"
 )
 
-var homeView *views.View
-var contactView *views.View
-var faqView *views.View
-
-func home(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(homeView.Render(w, nil))
-}
-
-func contact(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	must(contactView.Render(w, nil))
-}
-
-func faq(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text-html")
-	must(faqView.Render(w, nil))
-}
-
-func notFound404(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text/html")
-	fmt.Fprint(w, "To get in touch, please send an email to <a href=\"mailto:support@lenslocked.com\">support@lenslocked.com</a>.")
-}
-
-func notFound(w http.ResponseWriter, r *http.Request) {
-	w.Header().Set("Content-Type", "text-html")
-	w.WriteHeader(http.StatusNotFound)
-	fmt.Fprint(w, "<h1>404</h1> sorry your page not found")
-}
-
 func main() {
 
-	homeView = views.NewView("bootstrap", "views/home.gohtml")
-	contactView = views.NewView("bootstrap", "views/contact.gohtml")
-	faqView = views.NewView("bootstrap", "views/faq.gohtml")
+	staticC := controllers.NewStatic()
 	usersC := controllers.NewUsers()
 
 	r := mux.NewRouter()
-	r.NotFoundHandler = http.HandlerFunc(notFound)
-	r.HandleFunc("/contact", contact).Methods("GET")
+	r.Handle("/", staticC.Home).Methods("GET")
+	r.Handle("/contact", staticC.Contact).Methods("GET")
 	r.HandleFunc("/signup", usersC.New).Methods("GET")
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
-	r.HandleFunc("/faq", faq).Methods("GET")
-	r.HandleFunc("/", home).Methods("GET")
+	//r.HandleFunc("/faq", faq).Methods("GET")
 
 	http.ListenAndServe(":3000", r)
 }
