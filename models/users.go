@@ -53,7 +53,7 @@ func (us *UserService) Delete(id uint) error {
 		return ErrInvalidID
 	}
 
-	user := {Model: gorm.Model{ID: id}}
+	user := User{Model: gorm.Model{ID: id}}
 	return us.db.Delete(&user).Error
 }
 
