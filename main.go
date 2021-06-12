@@ -40,8 +40,8 @@ func main() {
 	r.HandleFunc("/signup", usersC.Create).Methods("POST")
 	//r.HandleFunc("/faq", faq).Methods("GET")
 
-	http.ListenAndServe(":3001", r)
-	fmt.Println("Listening on port 3001...")
+	http.ListenAndServe(":3000", r)
+	fmt.Println("Listening on port 3000...")
 }
 
 func must(err error) {
