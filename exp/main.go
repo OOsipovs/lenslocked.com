@@ -1,12 +1,16 @@
 package main
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"fmt"
-
-	"lenslocked.com/rand"
 )
 
 func main() {
-	fmt.Println(rand.String(10))
-	fmt.Println(rand.RememberToken())
+	toHash := []byte("this-is-my-string-to-hash")
+	h := hmac.New(sha256.New, []byte("my-secret-key"))
+	h.Write(toHash)
+
+	b := h.Sum(nil)
+	fmt.Println(b)
 }
